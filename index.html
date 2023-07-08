@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+        #errorMess {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body onload="display()">
+    <div class="container-fluid col-lg-8 col-10 shadow-sm py-2 my-5">
+        <div>
+                <h1 class="text-center text-info text-decoration-underline">MEANY BUDGET</h1>
+                <h3 class="text-center text-info mb-4 shadow-sm"> A note to keep track your daily finance </h3>
+        </div> 
+        <div>
+            <input type="text" class="form-control py-3 mb-4" placeholder="name ot item" id="item">
+            <input type="number" class="form-control py-3 mb-4" placeholder=" enter  price" id="price">
+            <input type="number" class="form-control py-3 mb-4" placeholder=" enter  QTY" id="qty">
+        </div>
+        <div>
+            <button class="btn btn-danger" style="width:100% ;" onclick="addInfo()">
+                <h3> add all</h3>
+            </button>
+        </div>
+        <div>
+            <h5 class="text-center alert alert-danger mt-3" id="errorMess"></h5>
+        </div>
+    </div>
+    <div class="mt-3 col-lg-8 col-10 container-fluid my-5">
+        <div>
+            <!-- <h2 class="alert alert-success  text-center" style="display: block;" id="notification">No item yet </h2> -->
+            <table class="table shadow table-striped table-bordered" id="myTable"></table>
+        </div>
+    </div>
+
+
+    <!-- Modal for edit -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit student info</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="number" class="form-control my-2 d-none" placeholder="which Number"
+                        id="numberToBeDelete">
+                    <input type="text" class="form-control my-2" placeholder=" Enter the new item" id="newItem">
+                    <input type="number" class="form-control my-2" placeholder="Enter the new price" id="newPrice">
+                    <input type="number" class="form-control my-2" placeholder="Enter the new qty" id="newQty">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        onclick="editInfo()">save</button>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            let itemInfo = []
+            itemInfo = localStorage.getItem("allItem")
+            itemInfo = JSON.parse(itemInfo)
+
+            const addInfo = () => {
+                let allItem = {
+                    nameOfItem: item.value,
+                    priceOfItem: price.value,
+                    qtyOfItem: qty.value
+                }
+
+                if (item.value == "" || price.value == "" || qty.value == "") {
+                    errorMess.innerHTML = "Enter student information"
+                    errorMess.style.display = "block"
+
+                } else {
+                    errorMess.style.display = "none"
+                    // notification.style.display = "none"
+                    itemInfo.push(allItem)
+                    localStorage.setItem("allItem", JSON.stringify(itemInfo))
+                    item.value = ""
+                    price.value = ""
+                    qty.value = ""
+                    item.focus()
+                    console.log(itemInfo);
+                    display()
+                }
+            }
+            function display() {
+                myTable.innerHTML = ""
+                myTable.innerHTML = `
+                    <tr>
+                        <td>S/N</td>
+                        <td>Item</td>
+                        <td>price</td>
+                        <td>QTY</td>
+                        <td>Amount</td>
+                        <td>operators</td>
+                    </tr>
+                    `
+
+                for (let index = 0; index < itemInfo.length; index++) {
+                    myTable.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${itemInfo[index].nameOfItem}</td>
+                        <td>$ ${itemInfo[index].priceOfItem}</td>
+                        <td>${itemInfo[index].qtyOfItem}</td>  
+                        <td>$ ${itemInfo[index].qtyOfItem * itemInfo[index].priceOfItem}</td> 
+                        <td>
+                            <button class="btn btn-info" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop" onclick='showModal(${index})'>Edit</button>
+                            <button class=" btn btn-danger" onclick="delInfo(${index})">Delete</button>
+                        
+                        </td>
+                    </tr>
+                    `
+                }
+            };
+
+            function showModal(index) {
+                numberToBeDelete.value = index;
+                newItem.value = itemInfo[index].nameOfItem;
+                newPrice.value = itemInfo[index].priceOfItem;
+                newQty.value = itemInfo[index].qtyOfItem;
+            }
+
+            function editInfo() {
+                let newIndex = numberToBeDelete.value;
+                let editableObj = {
+                    nameOfItem: newItem.value,
+                    priceOfItem: newPrice.value,
+                    qtyOfItem: newQty.value
+
+                }
+                if (newItem.value != "" && newPrice.value != "" && newQty.value != "") {
+                    itemInfo.splice(newIndex, 1, editableObj)
+                    localStorage.setItem("allItem", JSON.stringify(itemInfo))
+
+                    display()
+                } else {
+                    alert('fill all the space')
+                }
+            }
+
+            function delInfo(index) {
+                itemInfo.splice(index, 1)
+                localStorage.setItem("allItem", JSON.stringify(itemInfo))
+
+                display()
+            }
+
+
+        </script>
+
+
+</body>
+
+</html>
