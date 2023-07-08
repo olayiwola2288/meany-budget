@@ -74,13 +74,15 @@
 
         <script>
 
-
+            var itemInfo
+            var itemInfoLS = localStorage.getItem("allItem")
             
-            itemInfo = localStorage.getItem("allItem")
-            if (!itemInfo) {
-                itemInfo = []
+
+            if (!itemInfoLS) {
+                itemInfo = [];
+            } else {
+                itemInfo = JSON.parse(itemInfoLS);
             }
-            itemInfo = JSON.parse(itemInfo)
 
             const addInfo = () => {
                 let allItem = {
