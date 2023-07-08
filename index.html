@@ -11,6 +11,7 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://kit.fontawesome.com/85d3ba5abe.js" crossorigin="anonymous"></script>
     <style>
         #errorMess {
             display: none;
@@ -126,12 +127,12 @@
                     <tr>
                         <td>${index + 1}</td>
                         <td>${itemInfo[index].nameOfItem}</td>
-                        <td>$ ${itemInfo[index].priceOfItem}</td>
+                        <td><i class="fa-solid fa-naira-sign"></i>  ${itemInfo[index].priceOfItem}</td>
                         <td>${itemInfo[index].qtyOfItem}</td>  
-                        <td>$ ${itemInfo[index].qtyOfItem * itemInfo[index].priceOfItem}</td> 
+                        <td><i class="fa-solid fa-naira-sign"></i>  ${itemInfo[index].qtyOfItem * itemInfo[index].priceOfItem}</td> 
                         <td>
                             <button class="btn btn-info" data-bs-toggle="modal"
-                    data-bs-target="#staticBackdrop" onclick='showModal(${index})'>Edit</button>
+                    data-bs-target="#staticBackdrop" onclick='showModal(<i class="fa-solid fa-naira-sign"></i> {index})'>Edit</button>
                             <button class=" btn btn-danger" onclick="delInfo(${index})">Delete</button>
                         
                         </td>
